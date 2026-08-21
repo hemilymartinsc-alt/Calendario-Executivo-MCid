@@ -1,0 +1,213 @@
+{
+  "privileges": [],
+  "dataRoles": [
+    {
+      "displayName": "Id Evento",
+      "name": "idEvento",
+      "kind": "Grouping",
+      "description": "Chave única do evento."
+    },
+    {
+      "displayName": "Data Específica",
+      "name": "dataEspecifica",
+      "kind": "Grouping",
+      "description": "Base[Data Específica (se houver)]."
+    },
+    {
+      "displayName": "Data Quinzena",
+      "name": "dataQuinzena",
+      "kind": "Grouping",
+      "description": "Base[Data Quinzena]."
+    },
+    {
+      "displayName": "Ano do Evento",
+      "name": "anoEvento",
+      "kind": "Grouping",
+      "description": "Base[Ano do Evento]."
+    },
+    {
+      "displayName": "Tipo Data",
+      "name": "tipoData",
+      "kind": "Grouping",
+      "description": "Coluna auxiliar: Data Exata, Quinzena ou Sem Data."
+    },
+    {
+      "displayName": "Quinzena Nº",
+      "name": "quinzenaN",
+      "kind": "Grouping",
+      "description": "Coluna auxiliar: 1 ou 2."
+    },
+    {
+      "displayName": "Categoria Calendário",
+      "name": "categoriaCalendario",
+      "kind": "Grouping",
+      "description": "Entrega, Assinatura, Emissão de O.S., Visita, Institucional ou Outros."
+    },
+    {
+      "displayName": "Tipologia do Evento",
+      "name": "tipologia",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Nome do Empreendimento",
+      "name": "empreendimento",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Município",
+      "name": "municipio",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "UF",
+      "name": "uf",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Secretaria / Unidade responsável",
+      "name": "secretaria",
+      "kind": "Grouping"
+    }
+  ],
+  "dataViewMappings": [
+    {
+      "conditions": [
+        {
+          "idEvento": {
+            "max": 1
+          },
+          "dataEspecifica": {
+            "max": 1
+          },
+          "dataQuinzena": {
+            "max": 1
+          },
+          "anoEvento": {
+            "max": 1
+          },
+          "tipoData": {
+            "max": 1
+          },
+          "quinzenaN": {
+            "max": 1
+          },
+          "categoriaCalendario": {
+            "max": 1
+          },
+          "tipologia": {
+            "max": 1
+          },
+          "empreendimento": {
+            "max": 1
+          },
+          "municipio": {
+            "max": 1
+          },
+          "uf": {
+            "max": 1
+          },
+          "secretaria": {
+            "max": 1
+          }
+        }
+      ],
+      "table": {
+        "rows": {
+          "select": [
+            {
+              "for": {
+                "in": "idEvento"
+              }
+            },
+            {
+              "for": {
+                "in": "dataEspecifica"
+              }
+            },
+            {
+              "for": {
+                "in": "dataQuinzena"
+              }
+            },
+            {
+              "for": {
+                "in": "anoEvento"
+              }
+            },
+            {
+              "for": {
+                "in": "tipoData"
+              }
+            },
+            {
+              "for": {
+                "in": "quinzenaN"
+              }
+            },
+            {
+              "for": {
+                "in": "categoriaCalendario"
+              }
+            },
+            {
+              "for": {
+                "in": "tipologia"
+              }
+            },
+            {
+              "for": {
+                "in": "empreendimento"
+              }
+            },
+            {
+              "for": {
+                "in": "municipio"
+              }
+            },
+            {
+              "for": {
+                "in": "uf"
+              }
+            },
+            {
+              "for": {
+                "in": "secretaria"
+              }
+            }
+          ],
+          "dataReductionAlgorithm": {
+            "top": {
+              "count": 5000
+            }
+          }
+        }
+      }
+    }
+  ],
+  "supportsLandingPage": true,
+  "supportsEmptyDataView": true,
+  "supportsKeyboardFocus": true,
+  "supportsMultiVisualSelection": true,
+  "objects": {
+    "appearance": {
+      "displayName": "Aparência",
+      "description": "Elementos visuais do Calendário Executivo MCid.",
+      "properties": {
+        "showTopBar": {
+          "displayName": "Exibir barra institucional",
+          "description": "Mostra ou oculta a barra azul institucional no topo do visual.",
+          "type": {
+            "bool": true
+          }
+        },
+        "showFooter": {
+          "displayName": "Exibir rodapé",
+          "description": "Mostra ou oculta o rodapé institucional do visual.",
+          "type": {
+            "bool": true
+          }
+        }
+      }
+    }
+  }
+}

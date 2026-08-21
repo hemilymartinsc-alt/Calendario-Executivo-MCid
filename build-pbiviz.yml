@@ -1,0 +1,35 @@
+name: Build PBIVIZ
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Package with official Power BI Visual Tools
+        run: npx pbiviz package
+
+      - name: Show generated files
+        run: find dist -maxdepth 2 -type f -print
+
+      - name: Upload PBIVIZ artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Calendario-Executivo-MCid-v1.2.0
+          path: dist/*.pbiviz
+          if-no-files-found: error
