@@ -160,9 +160,34 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
                 Object.keys(roles).forEach((role:string) => { if(roles[role]) roleIndex[role] = index; });
             });
 
+            // Fallback de leitura para campos numéricos. Em algumas combinações de modelo/host,
+            // o Power BI pode entregar a coluna no DataView sem manter o role esperado no
+            // metadata da tabela. Nesses casos, usamos o displayName/queryName real da coluna.
+            const findColumnIndex = (aliases:string[]):number|undefined => {
+                const wanted = aliases.map((alias:string) => norm(alias));
+                for(let i=0;i<dv.table.columns.length;i++) {
+                    const column:any = dv.table.columns[i] || {};
+                    const names = [column.displayName,column.queryName,column.groupName]
+                        .filter((name:any) => hasValue(name))
+                        .map((name:any) => norm(name));
+                    if(names.some((name:string) => wanted.some((alias:string) => name === alias || name.endsWith("." + alias)))) return i;
+                }
+                return undefined;
+            };
+
+            const fallbackIndex:{[key:string]:number|undefined} = {
+                valorInvestimento: findColumnIndex(["Valor Investimento","Valor de Investimento"]),
+                valorRepasse: findColumnIndex(["Valor Repasse","Valor de Repasse"])
+            };
+
             self.events.forEach((event:any,index:number) => {
                 const row = dv.table.rows[event.rowIndex == null ? index : event.rowIndex] || [];
-                const value = (role:string) => roleIndex[role] === undefined ? null : row[roleIndex[role]];
+                const value = (role:string) => {
+                    const primary = roleIndex[role];
+                    if(primary !== undefined && row[primary] !== null && row[primary] !== undefined) return row[primary];
+                    const fallback = fallbackIndex[role];
+                    return fallback === undefined ? null : row[fallback];
+                };
 
                 // Regra funcional obrigatória: Data Específica > Data Quinzena > Sem Data.
                 event.type = event.date ? "Data Exata" : (hasValue(event.q) ? "Quinzena" : "Sem Data");
