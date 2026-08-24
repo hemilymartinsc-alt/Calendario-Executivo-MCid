@@ -93,6 +93,12 @@
       "description": "Base[Novo PAC (sim/não)]."
     },
     {
+      "displayName": "Proponente do Evento",
+      "name": "proponente",
+      "kind": "Grouping",
+      "description": "Base[Proponente do Evento]."
+    },
+    {
       "displayName": "Quantidade de UH",
       "name": "uh",
       "kind": "Grouping",
@@ -155,6 +161,9 @@
             "max": 1
           },
           "novoPac": {
+            "max": 1
+          },
+          "proponente": {
             "max": 1
           },
           "uh": {
@@ -246,6 +255,11 @@
             {
               "for": {
                 "in": "novoPac"
+              }
+            },
+            {
+              "for": {
+                "in": "proponente"
               }
             },
             {
