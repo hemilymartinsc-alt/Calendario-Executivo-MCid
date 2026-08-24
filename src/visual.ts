@@ -418,7 +418,9 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
                 if(!n) return;
                 const button = document.createElement("button");
                 button.className = "mcid-summary-btn" + (self.state.category === category ? " active" : "");
-                button.innerHTML = '<div class="mcid-summary-name" style="color:' + COLORS[category] + '">' + category + '</div><div class="mcid-summary-count">' + n + '</div>';
+                button.setAttribute("aria-label", category + " — " + n + " " + (n === 1 ? "evento" : "eventos"));
+                button.title = category + " — " + n + " " + (n === 1 ? "evento" : "eventos");
+                button.innerHTML = '<span class="mcid-summary-square" style="background:' + COLORS[category] + '"></span><span class="mcid-summary-count">' + n + '</span>';
                 button.onclick = () => {
                     self.state.category = self.state.category === category ? null : category;
                     self.state.expandedEventId = null;
