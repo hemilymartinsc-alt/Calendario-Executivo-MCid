@@ -48,7 +48,9 @@
 }
 .mcid-btn{min-width:58px;padding:0 17px;cursor:pointer;font-size:27px;line-height:1}
 .mcid-btn:hover{background:#f3f7fd;border-color:#aec5e6}
-.mcid-month-label{min-width:244px;padding:0 20px;display:flex;align-items:center;justify-content:center;white-space:nowrap;text-transform:none}
+.mcid-month-label{min-width:244px;padding:0 20px;display:flex;align-items:center;justify-content:center;white-space:nowrap;text-transform:none;cursor:text}
+.mcid-month-input{width:100%;height:100%;border:0;outline:0;background:transparent;padding:0 4px;text-align:center;color:#082f76;font-family:"Segoe UI",Inter,Arial,sans-serif;font-size:18px;font-weight:850;line-height:1}
+.mcid-month-input::placeholder{font-style:italic;color:#7183a0;font-weight:650;opacity:1}
 
 /* Grade: mais área útil para calendário e painel lateral */
 .mcid-grid{
@@ -91,7 +93,7 @@
 .mcid-legend{padding:11px 17px;display:flex;flex-direction:column;background:#fff}
 .mcid-legend-head{gap:12px}
 .mcid-legend-list{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-top:10px;flex:1;align-content:start}
-.mcid-legend-item{display:flex;align-items:center;gap:10px;font-size:17px;color:#08245a;font-weight:650;cursor:pointer;padding:4px 5px;border-radius:5px;line-height:1.15}
+.mcid-legend-item{display:flex;align-items:center;gap:10px;font-family:"Segoe UI",Inter,Arial,sans-serif;font-size:18px;color:#08245a;font-weight:900;font-stretch:normal;letter-spacing:0;cursor:pointer;padding:4px 5px;border-radius:5px;line-height:1.15}
 .mcid-legend-item:hover,.mcid-legend-item.active{background:#edf4ff}
 .mcid-swatch{width:16px;height:16px;border-radius:4px;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04)}
 
@@ -128,12 +130,12 @@
 /* Resumo contextual: uma única linha, sem títulos; quadrado maior + quantidade. */
 .mcid-summary{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);grid-template-rows:1fr;gap:6px;margin:8px 12px 0;flex:0 0 auto;align-items:center}
 .mcid-summary:empty{display:none}
-.mcid-summary-btn{min-width:0;height:38px;border:0;background:transparent;border-radius:7px;padding:4px 5px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;color:#08245a;overflow:hidden}
-.mcid-summary-btn:hover{background:#f2f6fc}
-.mcid-summary-btn.active{background:#eaf2ff;box-shadow:inset 0 0 0 1px #9bbbe8}
-.mcid-summary-square{width:18px;height:18px;border-radius:3px;display:block;flex:0 0 18px}
-.mcid-summary-count{font-size:17px;font-weight:900;color:#08245a;line-height:1}
-.mcid-summary-name{display:none!important}
+.mcid-summary-btn{min-width:0;height:42px;border:0;background:transparent;border-radius:7px;padding:4px 5px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
+.mcid-summary-btn:hover{background:#f5f8fd}
+.mcid-summary-btn.active{background:#eef4ff}
+.mcid-summary-tile{width:34px;height:34px;border:3px solid currentColor;border-radius:2px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI",Inter,Arial,sans-serif;font-size:17px;font-weight:900;line-height:1;flex:0 0 34px}
+.mcid-summary-btn.active .mcid-summary-tile{box-shadow:0 0 0 2px #c8d9f0}
+.mcid-summary-name,.mcid-summary-square,.mcid-summary-count{display:none!important}
 .mcid-event-list{flex:1;min-height:0;overflow:auto;margin-top:0;padding:4px 12px 12px;scrollbar-gutter:stable}
 .mcid-event-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:13px 2px;border-bottom:1px solid #dbe4ef;cursor:pointer;transition:background .15s ease}
 .mcid-event-row:hover{background:#f7faff}
@@ -178,13 +180,13 @@
   .mcid-grid{grid-template-columns:minmax(0,1fr) 600px;grid-template-rows:160px minmax(0,1fr)}
   .mcid-section-title{font-size:19px}.mcid-info{font-size:15.5px}
   .mcid-fname{font-size:21px}.mcid-fcount{font-size:19px}
-  .mcid-legend-item{font-size:18px}.mcid-week-head div{font-size:20px}.mcid-day-num{font-size:18px}
+  .mcid-legend-item{font-size:19px}.mcid-week-head div{font-size:20px}.mcid-day-num{font-size:18px}
   .mcid-badge{font-size:14px}
   .mcid-events-title{font-size:20px}.mcid-events-sub{font-size:17px}
   .mcid-date-chip{font-size:17px}.mcid-date-chip strong{font-size:29px}
   .mcid-event-line1{font-size:21px}.mcid-event-line2{font-size:19.5px}.mcid-event-line3{font-size:18.5px}
   .mcid-event-details{--mcid-detail-font-size:18px}
-  .mcid-summary-square{width:20px;height:20px;flex-basis:20px}.mcid-summary-count{font-size:18px}
+  .mcid-summary-tile{width:36px;height:36px;flex-basis:36px;font-size:18px}
 }
 
 /* Fallbacks responsivos sem comprometer o alvo 1920x1080 */
@@ -192,16 +194,16 @@
   .mcid-topbar{padding:0 22px}.mcid-shell{padding-left:22px;padding-right:22px}
   .mcid-grid{grid-template-columns:minmax(0,1fr) 440px}
   .mcid-title{font-size:31px}.mcid-subtitle{font-size:16px}
-  .mcid-month-label{min-width:205px;font-size:16px}.mcid-btn{min-width:50px;font-size:22px;padding:0 12px}
+  .mcid-month-label{min-width:205px;font-size:16px}.mcid-month-input{font-size:16px}.mcid-btn{min-width:50px;font-size:22px;padding:0 12px}
   .mcid-info{font-size:13px}.mcid-fname{font-size:17px}.mcid-fcount{font-size:15px}
-  .mcid-legend-item{font-size:14px}.mcid-badge{font-size:11.5px}
+  .mcid-legend-item{font-size:15px}.mcid-badge{font-size:11.5px}
   .mcid-event-line1{font-size:16px}.mcid-event-line2{font-size:15px}.mcid-event-line3{font-size:14px}.mcid-event-details{--mcid-detail-font-size:14px}
 }
 @media(max-width:1100px){
   .mcid-grid{grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:145px minmax(0,1fr)}
   .mcid-title{font-size:27px}.mcid-subtitle{font-size:14px}.mcid-info{display:none}
   .mcid-fname{font-size:14px}.mcid-fcount{font-size:13px}.mcid-day{padding:7px}.mcid-badge{font-size:9.5px}
-  .mcid-total-label{font-size:10px}.mcid-month-label{min-width:170px;font-size:14px}.mcid-btn{font-size:18px;min-width:44px;padding:0 9px}
+  .mcid-total-label{font-size:10px}.mcid-month-label{min-width:170px;font-size:14px}.mcid-month-input{font-size:14px}.mcid-btn{font-size:18px;min-width:44px;padding:0 9px}
 }
 .mcid-calendar-root.mcid-no-topbar .mcid-shell{height:100%}
 @media(max-width:1200px){.mcid-brand-logo-wrap{height:46px;padding:3px 6px}.mcid-brand-logo{height:38px;max-width:160px}.mcid-top-meta{font-size:16px}}
@@ -216,4 +218,4 @@
 .mcid-category-square{width:11px;height:11px;border-radius:2px;display:block;flex:0 0 11px;box-shadow:none!important}
 .mcid-category-count,.mcid-single-category,.mcid-same-category{display:none!important}
 @media(min-width:1700px) and (min-height:950px){.mcid-category-indicators{gap:5px}.mcid-category-indicator{width:15px;height:15px;min-width:15px}.mcid-category-square{width:12px;height:12px;flex-basis:12px}}
-@media(max-width:1100px){.mcid-category-indicators{gap:2px}.mcid-category-indicator{width:11px;height:11px;min-width:11px}.mcid-category-square{width:9px;height:9px;flex-basis:9px}.mcid-summary{gap:3px;margin-left:8px;margin-right:8px}.mcid-summary-btn{gap:4px;padding-left:2px;padding-right:2px}.mcid-summary-square{width:14px;height:14px;flex-basis:14px}.mcid-summary-count{font-size:14px}}
+@media(max-width:1100px){.mcid-category-indicators{gap:2px}.mcid-category-indicator{width:11px;height:11px;min-width:11px}.mcid-category-square{width:9px;height:9px;flex-basis:9px}.mcid-summary{gap:3px;margin-left:8px;margin-right:8px}.mcid-summary-btn{padding-left:2px;padding-right:2px}.mcid-summary-tile{width:28px;height:28px;flex-basis:28px;font-size:14px;border-width:2px}}
