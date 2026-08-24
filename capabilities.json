@@ -75,6 +75,12 @@
       "description": "Base[Subfonte]."
     },
     {
+      "displayName": "Executor do Empreendimento",
+      "name": "executor",
+      "kind": "Grouping",
+      "description": "Base[Executor do Empreendimento]."
+    },
+    {
       "displayName": "Minha Casa, Minha Vida",
       "name": "mcmv",
       "kind": "Grouping",
@@ -91,6 +97,12 @@
       "name": "uh",
       "kind": "Grouping",
       "description": "Base[UH]."
+    },
+    {
+      "displayName": "Observações",
+      "name": "observacoes",
+      "kind": "Grouping",
+      "description": "Base[Observações]."
     }
   ],
   "dataViewMappings": [
@@ -136,6 +148,9 @@
           "subfonte": {
             "max": 1
           },
+          "executor": {
+            "max": 1
+          },
           "mcmv": {
             "max": 1
           },
@@ -143,6 +158,9 @@
             "max": 1
           },
           "uh": {
+            "max": 1
+          },
+          "observacoes": {
             "max": 1
           }
         }
@@ -217,6 +235,11 @@
             },
             {
               "for": {
+                "in": "executor"
+              }
+            },
+            {
+              "for": {
                 "in": "mcmv"
               }
             },
@@ -228,6 +251,11 @@
             {
               "for": {
                 "in": "uh"
+              }
+            },
+            {
+              "for": {
+                "in": "observacoes"
               }
             }
           ],
