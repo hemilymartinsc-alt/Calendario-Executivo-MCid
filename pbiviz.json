@@ -4,8 +4,8 @@
     "displayName": "Calendário Executivo MCid",
     "guid": "MCidCalendarioExecutivo3E1C9FBB0A8D4A859E5172AA1B54C601",
     "visualClassName": "Visual",
-    "version": "3.6.4.0",
-    "description": "Calendário Executivo MCid V3 — Opção 2 funcional com Investimento e Repasse no detalhamento executivo dos eventos.",
+    "version": "3.6.4.1",
+    "description": "Calendário Executivo MCid V3 — correção de leitura dos campos numéricos Valor Investimento e Valor Repasse no detalhamento executivo.",
     "supportUrl": "https://learn.microsoft.com/power-bi/developer/visuals/",
     "gitHubUrl": ""
   },
