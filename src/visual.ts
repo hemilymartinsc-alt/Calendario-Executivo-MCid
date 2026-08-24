@@ -43,6 +43,24 @@ function hasValue(value:any): boolean {
     return s !== "" && s !== "–" && s !== "-";
 }
 
+function fmtCurrency(value:any): string {
+    if(!hasValue(value)) return "";
+    if(typeof value === "number" && isFinite(value)) {
+        return value.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+    }
+    const raw = String(value).trim();
+    if(/^R\$\s*/i.test(raw)) return raw;
+    const compact = raw.replace(/\s+/g, "");
+    let normalized = compact;
+    if(compact.indexOf(",") >= 0) normalized = compact.replace(/\./g, "").replace(",", ".");
+    normalized = normalized.replace(/[^0-9.\-]/g, "");
+    const numeric = Number(normalized);
+    if(normalized && isFinite(numeric)) {
+        return numeric.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+    }
+    return raw;
+}
+
 function isYes(value:any): boolean {
     const s = norm(value);
     return s === "sim" || s === "s" || s === "yes" || s === "true" || s === "1";
@@ -111,7 +129,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
     public showLanding(): void {
         const self:any = this;
         if(!self.root) return;
-        self.root.innerHTML = '<div class="mcid-landing"><div class="mcid-landing-box"><h2>Calendário Executivo MCid</h2><p>O visual foi importado corretamente. Para ativá-lo, associe os campos da tabela <b>Base</b> aos campos do visual.</p><div class="mcid-map-table"><div><b>Id Evento</b> → Id Evento</div><div><b>Data Específica</b> → Data Específica (se houver)</div><div><b>Data Quinzena</b> → Data Quinzena</div><div><b>Ano do Evento</b> → Ano do Evento</div><div><b>Tipo Data</b> → Tipo Data</div><div><b>Quinzena Nº</b> → Quinzena Nº</div><div><b>Categoria Calendário</b> → Categoria Calendário</div><div><b>Tipologia</b> → Tipologia do Evento</div><div><b>Empreendimento</b> → Nome do Empreendimento / Medida / Ação</div><div><b>Município</b> → Município</div><div><b>UF</b> → Sigla Estado</div><div><b>Secretaria</b> → Unidade responsável</div><div><b>Fonte</b> → Subfonte</div><div><b>Executor</b> → Executor do Empreendimento</div><div><b>Minha Casa, Minha Vida</b> → Minha casa minha vida</div><div><b>Novo PAC</b> → Novo PAC (sim/não)</div><div><b>Proponente</b> → Proponente do Evento</div><div><b>UH</b> → UH</div><div><b>Observações</b> → Observações</div></div><div class="mcid-warn">O visual não cria datas artificiais: Data Específica vai ao dia exato; Data Quinzena fica nas previsões por quinzena; registros sem ambas permanecem em Sem Data.</div></div></div>';
+        self.root.innerHTML = '<div class="mcid-landing"><div class="mcid-landing-box"><h2>Calendário Executivo MCid</h2><p>O visual foi importado corretamente. Para ativá-lo, associe os campos da tabela <b>Base</b> aos campos do visual.</p><div class="mcid-map-table"><div><b>Id Evento</b> → Id Evento</div><div><b>Data Específica</b> → Data Específica (se houver)</div><div><b>Data Quinzena</b> → Data Quinzena</div><div><b>Ano do Evento</b> → Ano do Evento</div><div><b>Tipo Data</b> → Tipo Data</div><div><b>Quinzena Nº</b> → Quinzena Nº</div><div><b>Categoria Calendário</b> → Categoria Calendário</div><div><b>Tipologia</b> → Tipologia do Evento</div><div><b>Empreendimento</b> → Nome do Empreendimento / Medida / Ação</div><div><b>Município</b> → Município</div><div><b>UF</b> → Sigla Estado</div><div><b>Secretaria</b> → Unidade responsável</div><div><b>Fonte</b> → Subfonte</div><div><b>Executor</b> → Executor do Empreendimento</div><div><b>Minha Casa, Minha Vida</b> → Minha casa minha vida</div><div><b>Novo PAC</b> → Novo PAC (sim/não)</div><div><b>Proponente</b> → Proponente do Evento</div><div><b>Valor de Investimento</b> → Valor de Investimento</div><div><b>Valor de Repasse</b> → Valor de Repasse</div><div><b>UH</b> → UH</div><div><b>Observações</b> → Observações</div></div><div class="mcid-warn">O visual não cria datas artificiais: Data Específica vai ao dia exato; Data Quinzena fica nas previsões por quinzena; registros sem ambas permanecem em Sem Data.</div></div></div>';
     }
 
     private showRuntimeError(stage:string, error:any): void {
@@ -153,6 +171,8 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
                 event.mcmv = value("mcmv");
                 event.novoPac = value("novoPac");
                 event.proponente = value("proponente");
+                event.valorInvestimento = value("valorInvestimento");
+                event.valorRepasse = value("valorRepasse");
                 event.uh = value("uh");
                 event.observacoes = value("observacoes");
             });
@@ -286,7 +306,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
         const self:any = this;
         const box = document.createElement("div");
         box.className = "mcid-card mcid-forecast";
-        box.innerHTML = '<div class="mcid-section-head"><div class="mcid-section-title">PREVISÕES SEM DATA DEFINIDA</div><span class="mcid-section-rule"></span><div class="mcid-info">Eventos sem data específica aparecem por quinzena, sem posicionamento em dia exato.</div></div>';
+        box.innerHTML = '<div class="mcid-section-head"><div class="mcid-section-title">PREVISÕES SEM DATA DEFINIDA</div><span class="mcid-section-rule"></span><div class="mcid-info">Eventos sem data específica são exibidos por quinzena, sem dia exato.</div></div>';
 
         const cards = document.createElement("div");
         cards.className = "mcid-forecast-cards";
@@ -509,10 +529,11 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
         details.className = "mcid-event-details";
         let html = '<div class="mcid-detail-line"><span class="mcid-detail-label">Secretaria:</span><span class="mcid-detail-value">' + esc(event.secretaria || "–") + '</span></div>';
         html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Fonte:</span><span class="mcid-detail-value">' + esc(event.subfonte || "–") + '</span></div>';
-        if(hasValue(event.executor)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Executor:</span><span class="mcid-detail-value">' + esc(event.executor) + '</span></div>';
+        if(hasValue(event.proponente)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Proponente:</span><span class="mcid-detail-value">' + esc(event.proponente) + '</span></div>';
         const program = this.programLabel(event);
         if(program) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Programa:</span><span class="mcid-detail-value">' + esc(program) + '</span></div>';
-        if(hasValue(event.proponente)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Proponente:</span><span class="mcid-detail-value">' + esc(event.proponente) + '</span></div>';
+        if(hasValue(event.valorInvestimento)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Investimento:</span><span class="mcid-detail-value">' + esc(fmtCurrency(event.valorInvestimento)) + '</span></div>';
+        if(hasValue(event.valorRepasse)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Repasse:</span><span class="mcid-detail-value">' + esc(fmtCurrency(event.valorRepasse)) + '</span></div>';
         if(hasValue(event.uh)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">UH:</span><span class="mcid-detail-value">' + esc(event.uh) + '</span></div>';
         if(hasValue(event.observacoes)) html += '<div class="mcid-detail-line mcid-detail-observacoes"><span class="mcid-detail-label">Observações:</span><span class="mcid-detail-value">' + esc(event.observacoes) + '</span></div>';
         details.innerHTML = html;
