@@ -61,6 +61,32 @@ function sameDate(a:Date,b:Date): boolean {
     return !!(a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate());
 }
 
+function parseMonthYear(value:any): {month:number;year:number}|null {
+    const raw = String(value == null ? "" : value).trim();
+    if(!raw) return null;
+
+    const numeric = raw.match(/^(\d{1,2})\s*[\/\-.]\s*(\d{4})$/);
+    if(numeric) {
+        const month = Number(numeric[1]) - 1;
+        const year = Number(numeric[2]);
+        if(month >= 0 && month <= 11) return {month,year};
+        return null;
+    }
+
+    const cleaned = norm(raw)
+        .replace(/\s+de\s+/g," ")
+        .replace(/[\/\-.]+/g," ")
+        .replace(/\s+/g," ")
+        .trim();
+    const parts = cleaned.split(" ");
+    if(parts.length < 2) return null;
+    const year = Number(parts[parts.length - 1]);
+    const monthName = parts.slice(0,-1).join(" ");
+    const month = MONTHS.map((name:string) => norm(name)).indexOf(monthName);
+    if(month < 0 || !/^\d{4}$/.test(String(year))) return null;
+    return {month,year};
+}
+
 function errorMessage(error:any): string {
     try {
         if(error && error.message) return String(error.message).slice(0,360);
@@ -85,7 +111,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
     public showLanding(): void {
         const self:any = this;
         if(!self.root) return;
-        self.root.innerHTML = '<div class="mcid-landing"><div class="mcid-landing-box"><h2>Calendário Executivo MCid</h2><p>O visual foi importado corretamente. Para ativá-lo, associe os campos da tabela <b>Base</b> aos campos do visual.</p><div class="mcid-map-table"><div><b>Id Evento</b> → Id Evento</div><div><b>Data Específica</b> → Data Específica (se houver)</div><div><b>Data Quinzena</b> → Data Quinzena</div><div><b>Ano do Evento</b> → Ano do Evento</div><div><b>Tipo Data</b> → Tipo Data</div><div><b>Quinzena Nº</b> → Quinzena Nº</div><div><b>Categoria Calendário</b> → Categoria Calendário</div><div><b>Tipologia</b> → Tipologia do Evento</div><div><b>Empreendimento</b> → Nome do Empreendimento / Medida / Ação</div><div><b>Município</b> → Município</div><div><b>UF</b> → Sigla Estado</div><div><b>Secretaria</b> → Unidade responsável</div><div><b>Fonte</b> → Subfonte</div><div><b>Executor</b> → Executor do Empreendimento</div><div><b>Minha Casa, Minha Vida</b> → Minha casa minha vida</div><div><b>Novo PAC</b> → Novo PAC (sim/não)</div><div><b>UH</b> → UH</div><div><b>Observações</b> → Observações</div></div><div class="mcid-warn">O visual não cria datas artificiais: Data Específica vai ao dia exato; Data Quinzena fica nas previsões por quinzena; registros sem ambas permanecem em Sem Data.</div></div></div>';
+        self.root.innerHTML = '<div class="mcid-landing"><div class="mcid-landing-box"><h2>Calendário Executivo MCid</h2><p>O visual foi importado corretamente. Para ativá-lo, associe os campos da tabela <b>Base</b> aos campos do visual.</p><div class="mcid-map-table"><div><b>Id Evento</b> → Id Evento</div><div><b>Data Específica</b> → Data Específica (se houver)</div><div><b>Data Quinzena</b> → Data Quinzena</div><div><b>Ano do Evento</b> → Ano do Evento</div><div><b>Tipo Data</b> → Tipo Data</div><div><b>Quinzena Nº</b> → Quinzena Nº</div><div><b>Categoria Calendário</b> → Categoria Calendário</div><div><b>Tipologia</b> → Tipologia do Evento</div><div><b>Empreendimento</b> → Nome do Empreendimento / Medida / Ação</div><div><b>Município</b> → Município</div><div><b>UF</b> → Sigla Estado</div><div><b>Secretaria</b> → Unidade responsável</div><div><b>Fonte</b> → Subfonte</div><div><b>Executor</b> → Executor do Empreendimento</div><div><b>Minha Casa, Minha Vida</b> → Minha casa minha vida</div><div><b>Novo PAC</b> → Novo PAC (sim/não)</div><div><b>Proponente</b> → Proponente do Evento</div><div><b>UH</b> → UH</div><div><b>Observações</b> → Observações</div></div><div class="mcid-warn">O visual não cria datas artificiais: Data Específica vai ao dia exato; Data Quinzena fica nas previsões por quinzena; registros sem ambas permanecem em Sem Data.</div></div></div>';
     }
 
     private showRuntimeError(stage:string, error:any): void {
@@ -126,6 +152,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
                 event.executor = value("executor");
                 event.mcmv = value("mcmv");
                 event.novoPac = value("novoPac");
+                event.proponente = value("proponente");
                 event.uh = value("uh");
                 event.observacoes = value("observacoes");
             });
@@ -180,6 +207,64 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
 
         (title.querySelector(".prev") as HTMLElement).onclick = () => { self.state.category = null; self.state.expandedEventId = null; self.shiftMonth(-1); };
         (title.querySelector(".next") as HTMLElement).onclick = () => { self.state.category = null; self.state.expandedEventId = null; self.shiftMonth(1); };
+
+        const monthLabel = title.querySelector(".mcid-month-label") as HTMLElement;
+        monthLabel.title = "Duplo clique para pesquisar Mês/Ano";
+        monthLabel.ondblclick = (evt:MouseEvent) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+            if(monthLabel.querySelector("input")) return;
+
+            const currentText = MONTHS[self.state.month] + " de " + self.state.year;
+            const input = document.createElement("input");
+            input.className = "mcid-month-input";
+            input.type = "text";
+            input.placeholder = "Mês/Ano";
+            input.setAttribute("aria-label","Pesquisar mês e ano");
+            input.autocomplete = "off";
+            input.spellcheck = false;
+
+            let finished = false;
+            const restore = () => {
+                if(finished) return;
+                finished = true;
+                monthLabel.textContent = currentText;
+            };
+            const apply = () => {
+                if(finished) return;
+                const parsed = parseMonthYear(input.value);
+                if(!parsed) {
+                    restore();
+                    return;
+                }
+                finished = true;
+                self.state.month = parsed.month;
+                self.state.year = parsed.year;
+                self.state.day = null;
+                self.state.category = null;
+                self.state.forecast = null;
+                self.state.expandedEventId = null;
+                this.render();
+            };
+
+            input.onkeydown = (keyEvt:KeyboardEvent) => {
+                if(keyEvt.key === "Enter") {
+                    keyEvt.preventDefault();
+                    apply();
+                } else if(keyEvt.key === "Escape") {
+                    keyEvt.preventDefault();
+                    restore();
+                }
+            };
+            input.onblur = () => {
+                if(input.value.trim()) apply();
+                else restore();
+            };
+
+            monthLabel.innerHTML = "";
+            monthLabel.appendChild(input);
+            window.setTimeout(() => input.focus(),0);
+        };
 
         const grid = document.createElement("div");
         grid.className = "mcid-grid";
@@ -365,6 +450,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
         if(hasValue(event.executor)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Executor:</span><span class="mcid-detail-value">' + esc(event.executor) + '</span></div>';
         const program = this.programLabel(event);
         if(program) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Programa:</span><span class="mcid-detail-value">' + esc(program) + '</span></div>';
+        if(hasValue(event.proponente)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">Proponente:</span><span class="mcid-detail-value">' + esc(event.proponente) + '</span></div>';
         if(hasValue(event.uh)) html += '<div class="mcid-detail-line"><span class="mcid-detail-label">UH:</span><span class="mcid-detail-value">' + esc(event.uh) + '</span></div>';
         if(hasValue(event.observacoes)) html += '<div class="mcid-detail-line mcid-detail-observacoes"><span class="mcid-detail-label">Observações:</span><span class="mcid-detail-value">' + esc(event.observacoes) + '</span></div>';
         details.innerHTML = html;
@@ -407,10 +493,14 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
 
         const summary = document.createElement("div");
         summary.className = "mcid-summary";
-        const showSummary = !!(self.state.day || self.state.forecast);
+        const today = new Date();
+        const isNonCurrentMonth = self.state.year !== today.getFullYear() || self.state.month !== today.getMonth();
+        const showMonthSummary = isNonCurrentMonth && !self.state.day && !self.state.forecast;
+        const showSummary = !!(self.state.day || self.state.forecast || showMonthSummary);
         let summaryBase:any[] = events;
         if(self.state.forecast) summaryBase = self.forecastEvents(self.state.forecast);
         else if(self.state.day) summaryBase = self.events.filter((event:any) => event.type === "Data Exata" && sameDate(event.date,self.state.day));
+        else if(showMonthSummary) summaryBase = self.monthExact();
 
         if(showSummary) {
             CAT_ORDER.forEach((category:string) => {
@@ -420,7 +510,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
                 button.className = "mcid-summary-btn" + (self.state.category === category ? " active" : "");
                 button.setAttribute("aria-label", category + " — " + n + " " + (n === 1 ? "evento" : "eventos"));
                 button.title = category + " — " + n + " " + (n === 1 ? "evento" : "eventos");
-                button.innerHTML = '<span class="mcid-summary-square" style="background:' + COLORS[category] + '"></span><span class="mcid-summary-count">' + n + '</span>';
+                button.innerHTML = '<span class="mcid-summary-tile" style="border-color:' + COLORS[category] + ';color:' + COLORS[category] + '">' + n + '</span>';
                 button.onclick = () => {
                     self.state.category = self.state.category === category ? null : category;
                     self.state.expandedEventId = null;
