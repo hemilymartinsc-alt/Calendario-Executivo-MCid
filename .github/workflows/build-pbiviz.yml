@@ -1,10 +1,10 @@
-name: Build PBIVIZ
+name: Build PBIVIZ V3 Opção 2
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - v3-opcao2
 
 jobs:
   build:
@@ -31,6 +31,6 @@ jobs:
       - name: Upload PBIVIZ
         uses: actions/upload-artifact@v4
         with:
-          name: Calendario-Executivo-MCid-v1.2.0
+          name: Calendario-Executivo-MCid-v3.5.0-OPCAO2
           path: dist/*.pbiviz
           if-no-files-found: error
