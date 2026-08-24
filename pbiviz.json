@@ -4,8 +4,8 @@
     "displayName": "Calendário Executivo MCid",
     "guid": "MCidCalendarioExecutivo3E1C9FBB0A8D4A859E5172AA1B54C601",
     "visualClassName": "Visual",
-    "version": "3.6.1.0",
-    "description": "Calendário Executivo MCid V3 — Opção 2 funcional com painel lateral ampliado, resumo compacto por categorias e detalhes executivos.",
+    "version": "3.6.2.0",
+    "description": "Calendário Executivo MCid V3 — Opção 2 funcional com pesquisa direta Mês/Ano, resumo mensal por categorias e campo Proponente.",
     "supportUrl": "https://learn.microsoft.com/power-bi/developer/visuals/",
     "gitHubUrl": ""
   },
