@@ -67,6 +67,30 @@
       "displayName": "Secretaria / Unidade responsável",
       "name": "secretaria",
       "kind": "Grouping"
+    },
+    {
+      "displayName": "Fonte / Subfonte",
+      "name": "subfonte",
+      "kind": "Grouping",
+      "description": "Base[Subfonte]."
+    },
+    {
+      "displayName": "Minha Casa, Minha Vida",
+      "name": "mcmv",
+      "kind": "Grouping",
+      "description": "Base[Minha casa minha vida]."
+    },
+    {
+      "displayName": "Novo PAC",
+      "name": "novoPac",
+      "kind": "Grouping",
+      "description": "Base[Novo PAC (sim/não)]."
+    },
+    {
+      "displayName": "Quantidade de UH",
+      "name": "uh",
+      "kind": "Grouping",
+      "description": "Base[UH]."
     }
   ],
   "dataViewMappings": [
@@ -107,6 +131,18 @@
             "max": 1
           },
           "secretaria": {
+            "max": 1
+          },
+          "subfonte": {
+            "max": 1
+          },
+          "mcmv": {
+            "max": 1
+          },
+          "novoPac": {
+            "max": 1
+          },
+          "uh": {
             "max": 1
           }
         }
@@ -172,6 +208,26 @@
             {
               "for": {
                 "in": "secretaria"
+              }
+            },
+            {
+              "for": {
+                "in": "subfonte"
+              }
+            },
+            {
+              "for": {
+                "in": "mcmv"
+              }
+            },
+            {
+              "for": {
+                "in": "novoPac"
+              }
+            },
+            {
+              "for": {
+                "in": "uh"
               }
             }
           ],
