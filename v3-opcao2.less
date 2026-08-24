@@ -1,0 +1,214 @@
+/*
+  Calendário Executivo MCid — V3.6.0
+  Arquitetura: V3.0.4 = motor funcional | Opção 2 = camada visual.
+  Foco: Full HD 1920x1080, identidade institucional, alta legibilidade.
+*/
+.mcid-calendar-root{
+  font-family:"Segoe UI",Inter,Arial,sans-serif;
+  color:#08245a;
+  background:#fff;
+  width:100%;height:100%;overflow:hidden;box-sizing:border-box;position:relative
+}
+.mcid-calendar-root *{box-sizing:border-box}
+
+/* TOPO INSTITUCIONAL — Opção 2 */
+.mcid-topbar{
+  height:62px;
+  background:linear-gradient(90deg,#062c70 0%,#043c91 52%,#052b6e 100%);
+  color:#fff;display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;box-shadow:0 1px 0 rgba(4,36,90,.22)
+}
+.mcid-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mcid-brand-logo-wrap{
+  height:50px;display:flex;align-items:center;justify-content:center;background:#fff;
+  padding:4px 8px;border-radius:4px;flex:0 0 auto;box-shadow:0 0 0 1px rgba(255,255,255,.25)
+}
+.mcid-brand-logo{display:block;height:42px;width:auto;max-width:176px;object-fit:contain}
+.mcid-brand-sep,.mcid-brand-sub{display:none}
+.mcid-top-meta{font-size:18px;font-weight:500;opacity:.98;white-space:nowrap}
+
+/* ESTRUTURA GERAL */
+.mcid-shell{
+  height:calc(100% - 62px);display:flex;flex-direction:column;
+  padding:10px 28px 8px;gap:10px;background:#fff
+}
+.mcid-titlebar{height:72px;display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+.mcid-titlewrap{display:flex;align-items:center;gap:16px;min-width:0}
+.mcid-title-icon{width:50px;height:50px;border:3px solid #0a3b90;border-radius:8px;position:relative;flex:0 0 auto}
+.mcid-title-icon:before{content:"";position:absolute;left:0;right:0;top:13px;border-top:3px solid #0a3b90}
+.mcid-title-icon:after{content:"";position:absolute;width:5px;height:9px;border-radius:3px;background:#0a3b90;top:-6px;left:10px;box-shadow:23px 0 0 #0a3b90}
+.mcid-title{font-size:36px;font-weight:900;line-height:.98;color:#082f76;text-transform:uppercase;letter-spacing:-.35px}
+.mcid-subtitle{font-size:18px;color:#0d54b8;margin-top:6px;font-weight:800}
+
+/* Navegação: sem dropdown e sem botão Hoje; apenas setas laterais + rótulo */
+.mcid-nav{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.mcid-btn,.mcid-month-label{
+  height:48px;border:1px solid #c9d8ee;background:#fff;border-radius:10px;color:#082f76;
+  font-weight:850;font-size:18px;box-shadow:0 1px 2px rgba(10,42,95,.04)
+}
+.mcid-btn{min-width:58px;padding:0 17px;cursor:pointer;font-size:27px;line-height:1}
+.mcid-btn:hover{background:#f3f7fd;border-color:#aec5e6}
+.mcid-month-label{min-width:244px;padding:0 20px;display:flex;align-items:center;justify-content:center;white-space:nowrap;text-transform:none}
+
+/* Grade: mais área útil para calendário e painel lateral */
+.mcid-grid{
+  flex:1;min-height:0;display:grid;
+  grid-template-columns:minmax(0,1fr) 500px;
+  grid-template-rows:158px minmax(0,1fr);gap:10px
+}
+.mcid-card{
+  border:1px solid #cfdced;border-radius:10px;background:#fff;min-width:0;min-height:0;
+  box-shadow:0 1px 2px rgba(7,43,98,.025)
+}
+
+/* Títulos de seção com linha institucional */
+.mcid-section-head{display:flex;align-items:center;gap:12px;min-height:24px;width:100%}
+.mcid-section-title{font-size:18px;font-weight:900;color:#082f76;letter-spacing:.05px;white-space:nowrap}
+.mcid-section-rule{height:2px;background:#2563d9;opacity:.85;flex:1;min-width:24px;border-radius:3px}
+.mcid-info{font-size:15px;color:#082f76;text-align:right;line-height:1.15;font-weight:700;white-space:nowrap;flex:0 1 auto;min-width:0}
+
+/* PREVISÕES */
+.mcid-forecast{padding:11px 18px;display:flex;flex-direction:column;background:#fff}
+.mcid-forecast-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:9px;flex:1;min-height:0}
+.mcid-forecast-btn{
+  border:1px solid #bdd3f2;border-radius:10px;
+  background:linear-gradient(135deg,#f5faff 0%,#eaf4ff 100%);
+  display:flex;align-items:center;gap:14px;padding:10px 16px;cursor:pointer;text-align:left;
+  color:#0a3480;min-height:0;transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease
+}
+.mcid-forecast-btn:hover{border-color:#8db5ed;box-shadow:0 2px 8px rgba(10,61,142,.08)}
+.mcid-forecast-btn.q2{background:linear-gradient(135deg,#f7fff9,#edf9f0);border-color:#c0e2c9;color:#078c3d}
+.mcid-forecast-btn.nodate{background:linear-gradient(135deg,#fbfcfd,#f1f4f7);border-color:#d3dbe5;color:#5b6576}
+.mcid-forecast-btn.active{outline:3px solid rgba(19,94,210,.15);border-color:#135ed2}
+.mcid-ficon{width:46px;height:46px;border:1.5px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;flex:0 0 auto}
+.mcid-fname{font-size:20px;font-weight:900;line-height:1.08}
+/* Ajuste posterior aprovado: subtítulos das contagens mais próximos da lista lateral */
+.mcid-fcount{font-size:18px;color:#08245a;margin-top:5px;font-weight:800;line-height:1.05}
+.mcid-forecast-btn.q2 .mcid-fcount{color:#0a6f36}
+.mcid-forecast-btn.nodate .mcid-fcount{color:#384d70}
+
+/* LEGENDA */
+.mcid-legend{padding:11px 17px;display:flex;flex-direction:column;background:#fff}
+.mcid-legend-head{gap:12px}
+.mcid-legend-list{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-top:10px;flex:1;align-content:start}
+.mcid-legend-item{display:flex;align-items:center;gap:10px;font-size:17px;color:#08245a;font-weight:650;cursor:pointer;padding:4px 5px;border-radius:5px;line-height:1.15}
+.mcid-legend-item:hover,.mcid-legend-item.active{background:#edf4ff}
+.mcid-swatch{width:16px;height:16px;border-radius:4px;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04)}
+
+/* CALENDÁRIO — cabeçalho azul forte da Opção 2 */
+.mcid-calendar{overflow:hidden;display:flex;flex-direction:column;border-color:#c8d8ed}
+.mcid-week-head{height:44px;display:grid;grid-template-columns:repeat(7,1fr);background:linear-gradient(180deg,#063b91,#07327c);border-bottom:1px solid #174a96;flex:0 0 auto}
+.mcid-week-head div{display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:19px;letter-spacing:.2px;border-right:1px solid rgba(255,255,255,.23)}
+.mcid-week-head div:last-child{border-right:none}
+.mcid-days{flex:1;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(6,1fr);min-height:0}
+.mcid-day{position:relative;border-right:1px solid #dbe4f0;border-bottom:1px solid #dbe4f0;padding:9px 10px 7px;overflow:hidden;cursor:pointer;background:#fff}
+.mcid-day:nth-child(7n){border-right:none}
+.mcid-day.selected{box-shadow:inset 0 0 0 2px #1a66d9;background:#f5f9ff}
+.mcid-day.out{background:#fbfcfe;color:#9aa9bd}
+.mcid-day-num{font-size:17px;font-weight:850;color:#082f76;line-height:1.1}
+.mcid-day.out .mcid-day-num{color:#9aa9bd}
+.mcid-total-label{position:absolute;top:8px;left:35px;right:8px;text-align:center;font-size:14px;font-weight:850;color:#153b76}
+.mcid-badges{display:flex;flex-direction:column;gap:4px;margin-top:7px}
+.mcid-badge{align-self:flex-start;max-width:100%;padding:3px 7px;border-radius:5px;font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid transparent;line-height:1.15}
+.mcid-dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.mcid-dot{width:13px;height:13px;border-radius:3px;cursor:pointer}
+.mcid-more{font-size:12px;color:#536789;margin-top:4px;font-weight:700}
+
+/* PAINEL LATERAL — Opção 2 visual + V3.0.4 funcional */
+.mcid-events{padding:0;display:flex;flex-direction:column;overflow:hidden;border-color:#c8d8ed}
+.mcid-events-head{
+  min-height:64px;background:linear-gradient(180deg,#063b91,#07327c);color:#fff;
+  display:flex;align-items:center;padding:8px 15px;flex:0 0 auto;border-radius:9px 9px 0 0
+}
+.mcid-events-heading{min-width:0}
+.mcid-small-cal{display:none}
+/* contextTitle preserva: EVENTOS em mês passado; PRÓXIMOS EVENTOS no atual/futuro; e títulos de seleção */
+.mcid-events-title{font-size:19px;font-weight:900;color:#fff;line-height:1.05;text-transform:uppercase;letter-spacing:.1px}
+.mcid-events-sub{font-size:16px;color:#fff;margin-top:5px;font-weight:750;line-height:1;opacity:.96}
+.mcid-summary{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);grid-template-rows:1fr;gap:4px;margin:8px 10px 0;flex:0 0 auto;align-items:stretch}
+.mcid-summary:empty{display:none}
+.mcid-summary-btn{min-width:0;border:1px solid #d4e0ef;background:#fff;border-radius:7px;padding:5px 3px 4px;cursor:pointer;text-align:center;overflow:hidden}
+.mcid-summary-btn.active{box-shadow:inset 0 0 0 2px #1a66d9;background:#f5f9ff}
+.mcid-summary-name{font-size:10px;font-weight:800;line-height:1.05;min-height:21px;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere}
+.mcid-summary-count{font-size:16px;font-weight:900;color:#08245a;margin-top:1px;line-height:1}
+.mcid-event-list{flex:1;min-height:0;overflow:auto;margin-top:0;padding:4px 14px 12px;scrollbar-gutter:stable}
+.mcid-event-row{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;padding:13px 4px;border-bottom:1px solid #dbe4ef;cursor:pointer;transition:background .15s ease}
+.mcid-event-row:hover{background:#f7faff}
+.mcid-event-row.expanded{background:#f4f8ff;border-bottom-color:#ceddf2}
+.mcid-event-body{min-width:0}
+.mcid-date-chip{font-size:16px;font-weight:900;color:#08245a;text-align:center;padding-top:1px;line-height:1.02}
+.mcid-date-chip strong{display:block;font-size:27px;color:#08245a;margin-bottom:4px;font-weight:950;letter-spacing:-.4px}
+.mcid-event-line1{font-size:20px;font-weight:900;color:#08245a;display:flex;align-items:stretch;gap:10px;line-height:1.28;min-height:27px}
+.mcid-event-line2{font-size:18.5px;color:#08245a;margin-top:6px;font-weight:780;line-height:1.32}
+.mcid-event-line3{font-size:17.5px;color:#08245a;margin-top:5px;font-weight:700;line-height:1.28}
+.mcid-event-category-bar{width:6px;min-height:27px;border-radius:4px;flex:0 0 6px;align-self:stretch}
+.mcid-event-category-text{min-width:0;display:block}
+.mcid-event-details{--mcid-detail-font-size:17.5px;margin-top:12px;padding:12px 14px;background:#edf3fd;border:1px solid #cdddf4;border-left:4px solid #0b5cc7;border-radius:7px;cursor:default}
+.mcid-detail-line{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px;align-items:start;font-size:var(--mcid-detail-font-size);font-weight:400;line-height:1.38;color:#08245a}
+.mcid-detail-line + .mcid-detail-line{margin-top:5px}
+.mcid-detail-label,.mcid-detail-value{font-weight:400;color:#08245a}
+.mcid-detail-value{overflow-wrap:anywhere}
+.mcid-detail-observacoes{font-size:calc(var(--mcid-detail-font-size) - 2px)}
+.mcid-empty{padding:24px 8px;text-align:center;color:#607493;font-size:16px;font-weight:650}
+
+/* RODAPÉ */
+.mcid-footer{height:27px;border-top:2px solid #2d6ee5;display:flex;align-items:flex-end;justify-content:space-between;color:#0b4ca8;font-size:12.5px;font-weight:650;padding:4px 2px 0;flex:0 0 auto}
+
+/* TOOLTIP E ESTADOS */
+.mcid-tooltip{position:fixed;z-index:999999;max-width:380px;background:#fff;border:1px solid #c7d6ea;border-radius:8px;box-shadow:0 8px 24px rgba(4,32,81,.18);padding:11px 13px;color:#08245a;font-size:13.5px;pointer-events:none;display:none;line-height:1.35}
+.mcid-tooltip strong{font-size:14px;color:#082b69}
+.mcid-tooltip .tip-item{margin-top:5px}
+.mcid-tooltip .tip-more{margin-top:7px;color:#0b5cc7;font-weight:850}
+.mcid-toast{position:absolute;right:22px;bottom:18px;background:#062f73;color:#fff;border-radius:7px;padding:9px 12px;font-size:12px;box-shadow:0 5px 18px rgba(0,0,0,.18);opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}
+.mcid-toast.show{opacity:1;transform:translateY(0)}
+
+/* LANDING / MAPEAMENTO — mantido funcionalmente */
+.mcid-landing{height:100%;display:flex;align-items:center;justify-content:center;background:#f7f9fc;padding:30px}
+.mcid-landing-box{max-width:900px;background:#fff;border:1px solid #d4deec;border-radius:14px;padding:28px 34px;box-shadow:0 8px 30px rgba(7,41,96,.08)}
+.mcid-landing h2{margin:0;color:#082b69;font-size:29px}.mcid-landing p{color:#526683;line-height:1.5;font-size:15px}
+.mcid-map-table{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;font-size:14px;color:#203b68}.mcid-map-table b{color:#0a3480}
+.mcid-warn{margin-top:17px;padding:10px 12px;border-radius:7px;background:#f6f9ff;color:#334f79;font-size:13px}
+
+/* Full HD: reforço seletivo, não mero escalonamento proporcional */
+@media(min-width:1700px) and (min-height:950px){
+  .mcid-title{font-size:38px}.mcid-subtitle{font-size:19px}
+  .mcid-grid{grid-template-columns:minmax(0,1fr) 520px;grid-template-rows:160px minmax(0,1fr)}
+  .mcid-section-title{font-size:19px}.mcid-info{font-size:15.5px}
+  .mcid-fname{font-size:21px}.mcid-fcount{font-size:19px}
+  .mcid-legend-item{font-size:18px}.mcid-week-head div{font-size:20px}.mcid-day-num{font-size:18px}
+  .mcid-badge{font-size:14px}
+  .mcid-events-title{font-size:20px}.mcid-events-sub{font-size:17px}
+  .mcid-date-chip{font-size:17px}.mcid-date-chip strong{font-size:29px}
+  .mcid-event-line1{font-size:21px}.mcid-event-line2{font-size:19.5px}.mcid-event-line3{font-size:18.5px}
+  .mcid-event-details{--mcid-detail-font-size:18px}
+}
+
+/* Fallbacks responsivos sem comprometer o alvo 1920x1080 */
+@media(max-width:1400px){
+  .mcid-topbar{padding:0 22px}.mcid-shell{padding-left:22px;padding-right:22px}
+  .mcid-grid{grid-template-columns:minmax(0,1fr) 400px}
+  .mcid-title{font-size:31px}.mcid-subtitle{font-size:16px}
+  .mcid-month-label{min-width:205px;font-size:16px}.mcid-btn{min-width:50px;font-size:22px;padding:0 12px}
+  .mcid-info{font-size:13px}.mcid-fname{font-size:17px}.mcid-fcount{font-size:15px}
+  .mcid-legend-item{font-size:14px}.mcid-badge{font-size:11.5px}
+  .mcid-event-line1{font-size:16px}.mcid-event-line2{font-size:15px}.mcid-event-line3{font-size:14px}.mcid-event-details{--mcid-detail-font-size:14px}
+}
+@media(max-width:1100px){
+  .mcid-grid{grid-template-columns:minmax(0,1fr) 330px;grid-template-rows:145px minmax(0,1fr)}
+  .mcid-title{font-size:27px}.mcid-subtitle{font-size:14px}.mcid-info{display:none}
+  .mcid-fname{font-size:14px}.mcid-fcount{font-size:13px}.mcid-day{padding:7px}.mcid-badge{font-size:9.5px}
+  .mcid-total-label{font-size:10px}.mcid-month-label{min-width:170px;font-size:14px}.mcid-btn{font-size:18px;min-width:44px;padding:0 9px}
+}
+.mcid-calendar-root.mcid-no-topbar .mcid-shell{height:100%}
+@media(max-width:1200px){.mcid-brand-logo-wrap{height:46px;padding:3px 6px}.mcid-brand-logo{height:38px;max-width:160px}.mcid-top-meta{font-size:16px}}
+.mcid-runtime-error{height:100%;display:flex;align-items:center;justify-content:center;padding:28px;background:#f7f9fc;color:#08245a}
+.mcid-runtime-error-box{width:min(820px,100%);background:#fff;border:1px solid #cbd8ea;border-left:5px solid #b42318;border-radius:10px;padding:24px 26px;box-shadow:0 8px 28px rgba(7,41,96,.08)}
+.mcid-runtime-error-title{font-size:22px;font-weight:900;color:#7a271a}.mcid-runtime-error-stage{font-size:14px;font-weight:800;margin-top:12px}.mcid-runtime-error-message{margin-top:8px;font-size:14px;line-height:1.45;color:#344767;overflow-wrap:anywhere}.mcid-runtime-error-help{margin-top:13px;padding-top:12px;border-top:1px solid #e0e7f0;font-size:13px;color:#526683}
+
+/* Regras finais de exibição por dia — somente quadradinhos por categoria */
+.mcid-category-indicators{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:8px}
+.mcid-category-indicator{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;padding:3px;border:0;border-radius:4px;background:transparent;cursor:pointer}
+.mcid-category-indicator:hover{background:#eef4fc}
+.mcid-category-square{width:11px;height:11px;border-radius:2px;display:block;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04)}
+.mcid-category-count,.mcid-single-category,.mcid-same-category{display:none!important}
+@media(min-width:1700px) and (min-height:950px){.mcid-category-indicator{width:21px;height:21px}.mcid-category-square{width:12px;height:12px}.mcid-summary-name{font-size:10.5px}.mcid-summary-count{font-size:17px}}
