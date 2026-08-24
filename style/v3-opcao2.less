@@ -133,7 +133,7 @@
 .mcid-summary-btn{min-width:0;height:42px;border:0;background:transparent;border-radius:7px;padding:4px 5px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
 .mcid-summary-btn:hover{background:#f5f8fd}
 .mcid-summary-btn.active{background:#eef4ff}
-.mcid-summary-tile{width:34px;height:34px;border:3px solid currentColor;border-radius:2px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI",Inter,Arial,sans-serif;font-size:17px;font-weight:900;line-height:1;flex:0 0 34px}
+.mcid-summary-tile{width:34px;height:34px;border:3px solid currentColor;border-radius:2px;background:currentColor;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI",Inter,Arial,sans-serif;font-size:17px;font-weight:900;color:#fff;line-height:1;flex:0 0 34px}
 .mcid-summary-btn.active .mcid-summary-tile{box-shadow:0 0 0 2px #c8d9f0}
 .mcid-summary-name,.mcid-summary-square,.mcid-summary-count{display:none!important}
 .mcid-event-list{flex:1;min-height:0;overflow:auto;margin-top:0;padding:4px 12px 12px;scrollbar-gutter:stable}
@@ -141,11 +141,11 @@
 .mcid-event-row:hover{background:#f7faff}
 .mcid-event-row.expanded{background:#f4f8ff;border-bottom-color:#ceddf2}
 .mcid-event-body{min-width:0}
-.mcid-date-chip{font-size:16px;font-weight:900;color:#08245a;text-align:center;padding-top:1px;line-height:1.02}
-.mcid-date-chip strong{display:block;font-size:27px;color:#08245a;margin-bottom:4px;font-weight:950;letter-spacing:-.4px}
-.mcid-event-line1{font-size:20px;font-weight:900;color:#08245a;display:flex;align-items:stretch;gap:10px;line-height:1.28;min-height:27px}
-.mcid-event-line2{font-size:18.5px;color:#08245a;margin-top:6px;font-weight:780;line-height:1.32}
-.mcid-event-line3{font-size:17.5px;color:#08245a;margin-top:5px;font-weight:700;line-height:1.28}
+.mcid-date-chip{font-size:15px;font-weight:900;color:#08245a;text-align:center;padding-top:1px;line-height:1.02}
+.mcid-date-chip strong{display:block;font-size:26px;color:#08245a;margin-bottom:4px;font-weight:950;letter-spacing:-.4px}
+.mcid-event-line1{font-size:19px;font-weight:900;color:#08245a;display:flex;align-items:stretch;gap:10px;line-height:1.28;min-height:27px}
+.mcid-event-line2{font-size:17.5px;color:#08245a;margin-top:6px;font-weight:780;line-height:1.32}
+.mcid-event-line3{font-size:16.5px;color:#08245a;margin-top:5px;font-weight:700;line-height:1.28}
 .mcid-event-category-bar{width:6px;min-height:27px;border-radius:4px;flex:0 0 6px;align-self:stretch}
 .mcid-event-category-text{min-width:0;display:block}
 .mcid-event-details{--mcid-detail-font-size:17.5px;margin-top:12px;padding:12px 14px;background:#edf3fd;border:1px solid #cdddf4;border-left:4px solid #0b5cc7;border-radius:7px;cursor:default}
@@ -183,8 +183,8 @@
   .mcid-legend-item{font-size:19px}.mcid-week-head div{font-size:20px}.mcid-day-num{font-size:18px}
   .mcid-badge{font-size:14px}
   .mcid-events-title{font-size:20px}.mcid-events-sub{font-size:17px}
-  .mcid-date-chip{font-size:17px}.mcid-date-chip strong{font-size:29px}
-  .mcid-event-line1{font-size:21px}.mcid-event-line2{font-size:19.5px}.mcid-event-line3{font-size:18.5px}
+  .mcid-date-chip{font-size:16px}.mcid-date-chip strong{font-size:28px}
+  .mcid-event-line1{font-size:20px}.mcid-event-line2{font-size:18.5px}.mcid-event-line3{font-size:17.5px}
   .mcid-event-details{--mcid-detail-font-size:18px}
   .mcid-summary-tile{width:36px;height:36px;flex-basis:36px;font-size:18px}
 }
@@ -195,9 +195,9 @@
   .mcid-grid{grid-template-columns:minmax(0,1fr) 440px}
   .mcid-title{font-size:31px}.mcid-subtitle{font-size:16px}
   .mcid-month-label{min-width:205px;font-size:16px}.mcid-month-input{font-size:16px}.mcid-btn{min-width:50px;font-size:22px;padding:0 12px}
-  .mcid-info{font-size:13px}.mcid-fname{font-size:17px}.mcid-fcount{font-size:15px}
+  .mcid-info{font-size:14px}.mcid-fname{font-size:17px}.mcid-fcount{font-size:15px}
   .mcid-legend-item{font-size:15px}.mcid-badge{font-size:11.5px}
-  .mcid-event-line1{font-size:16px}.mcid-event-line2{font-size:15px}.mcid-event-line3{font-size:14px}.mcid-event-details{--mcid-detail-font-size:14px}
+  .mcid-event-line1{font-size:15px}.mcid-event-line2{font-size:14px}.mcid-event-line3{font-size:13px}.mcid-event-details{--mcid-detail-font-size:14px}
 }
 @media(max-width:1100px){
   .mcid-grid{grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:145px minmax(0,1fr)}
