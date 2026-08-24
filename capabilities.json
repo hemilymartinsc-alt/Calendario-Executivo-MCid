@@ -101,14 +101,30 @@
     {
       "displayName": "Valor de Investimento",
       "name": "valorInvestimento",
-      "kind": "Grouping",
-      "description": "Base[Valor de Investimento]."
+      "kind": "Measure",
+      "description": "Base[Valor Investimento].",
+      "requiredTypes": [
+        {
+          "numeric": true
+        },
+        {
+          "integer": true
+        }
+      ]
     },
     {
       "displayName": "Valor de Repasse",
       "name": "valorRepasse",
-      "kind": "Grouping",
-      "description": "Base[Valor de Repasse]."
+      "kind": "Measure",
+      "description": "Base[Valor Repasse].",
+      "requiredTypes": [
+        {
+          "numeric": true
+        },
+        {
+          "integer": true
+        }
+      ]
     },
     {
       "displayName": "Quantidade de UH",
