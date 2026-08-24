@@ -286,7 +286,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
         const self:any = this;
         const box = document.createElement("div");
         box.className = "mcid-card mcid-forecast";
-        box.innerHTML = '<div class="mcid-section-head"><div class="mcid-section-title">PREVISÕES SEM DATA DEFINIDA</div><span class="mcid-section-rule"></span><div class="mcid-info">Eventos sem data específica aparecem por quinzena e não são posicionados em um dia exato.</div></div>';
+        box.innerHTML = '<div class="mcid-section-head"><div class="mcid-section-title">PREVISÕES SEM DATA DEFINIDA</div><span class="mcid-section-rule"></span><div class="mcid-info">Eventos sem data específica aparecem por quinzena, sem posicionamento em dia exato.</div></div>';
 
         const cards = document.createElement("div");
         cards.className = "mcid-forecast-cards";
@@ -414,10 +414,72 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
         return box;
     }
 
-    private isPastMonth(): boolean {
+    private isCurrentMonth(): boolean {
         const self:any = this;
         const today = new Date();
-        return new Date(self.state.year,self.state.month,1) < new Date(today.getFullYear(),today.getMonth(),1);
+        return self.state.year === today.getFullYear() && self.state.month === today.getMonth();
+    }
+
+    private monthEventsWithForecasts(): any[] {
+        const self:any = this;
+        const year = self.state.year;
+        const month = self.state.month;
+        return self.events.filter((event:any) => {
+            if(event.type === "Data Exata" && event.date) {
+                return event.date.getFullYear() === year && event.date.getMonth() === month;
+            }
+            if(event.type === "Quinzena") {
+                return event.year === year && event.qm === month && (event.qn === 1 || event.qn === 2);
+            }
+            return false;
+        });
+    }
+
+    public contextEvents(): any[] {
+        const self:any = this;
+        let events:any[] = [];
+
+        if(self.state.forecast) {
+            events = self.forecastEvents(self.state.forecast);
+            if(self.state.category) events = events.filter((event:any) => event.cat === self.state.category);
+        } else if(self.state.day) {
+            events = self.events.filter((event:any) => event.type === "Data Exata" && sameDate(event.date,self.state.day));
+            if(self.state.category) events = events.filter((event:any) => event.cat === self.state.category);
+        } else if(self.state.category) {
+            // Em meses diferentes do atual, a seleção por categoria respeita o conjunto mensal
+            // consolidado (Data Específica + Quinzenas). No mês atual, preserva a regra anterior.
+            events = this.isCurrentMonth()
+                ? self.monthExact().filter((event:any) => event.cat === self.state.category)
+                : this.monthEventsWithForecasts().filter((event:any) => event.cat === self.state.category);
+        } else if(this.isCurrentMonth()) {
+            // Mês atual: PRÓXIMOS EVENTOS = datas específicas de hoje em diante
+            // + previsões da quinzena correspondente ao dia atual.
+            const today = new Date();
+            const exact = self.monthExact().filter((event:any) => event.date && event.date.getDate() >= today.getDate());
+            const currentForecast = self.forecastEvents(today.getDate() <= 15 ? "q1" : "q2");
+            events = exact.concat(currentForecast);
+        } else {
+            // Meses anteriores e posteriores: todos os eventos do mês,
+            // reunindo Data Específica + 1ª Quinzena + 2ª Quinzena.
+            events = this.monthEventsWithForecasts();
+        }
+
+        events.sort((a:any,b:any) => {
+            const aExact = !!a.date;
+            const bExact = !!b.date;
+            if(aExact && bExact) {
+                const delta = a.date.getTime() - b.date.getTime();
+                if(delta !== 0) return delta;
+            } else if(aExact !== bExact) {
+                // Mantém as previsões sem dia exato agrupadas antes dos eventos datados,
+                // sem criar datas artificiais para quinzena.
+                return aExact ? 1 : -1;
+            } else if(a.type === "Quinzena" && b.type === "Quinzena" && a.qn !== b.qn) {
+                return (a.qn || 0) - (b.qn || 0);
+            }
+            return String(a.tip || "").localeCompare(String(b.tip || ""),"pt-BR");
+        });
+        return events;
     }
 
     public contextTitle(): string {
@@ -428,7 +490,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
         if(self.state.day && self.state.category) return self.state.category.toUpperCase() + " • " + fmtDate(self.state.day);
         if(self.state.day) return "EVENTOS DE " + fmtDate(self.state.day);
         if(self.state.category) return self.state.category.toUpperCase();
-        return this.isPastMonth() ? "EVENTOS" : "PRÓXIMOS EVENTOS";
+        return this.isCurrentMonth() ? "PRÓXIMOS EVENTOS" : "EVENTOS";
     }
 
     private eventKey(event:any): string {
@@ -500,7 +562,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
         let summaryBase:any[] = events;
         if(self.state.forecast) summaryBase = self.forecastEvents(self.state.forecast);
         else if(self.state.day) summaryBase = self.events.filter((event:any) => event.type === "Data Exata" && sameDate(event.date,self.state.day));
-        else if(showMonthSummary) summaryBase = self.monthExact();
+        else if(showMonthSummary) summaryBase = this.monthEventsWithForecasts();
 
         if(showSummary) {
             CAT_ORDER.forEach((category:string) => {
@@ -510,7 +572,7 @@ export class Visual extends (RuntimeVisual as any) implements IVisual {
                 button.className = "mcid-summary-btn" + (self.state.category === category ? " active" : "");
                 button.setAttribute("aria-label", category + " — " + n + " " + (n === 1 ? "evento" : "eventos"));
                 button.title = category + " — " + n + " " + (n === 1 ? "evento" : "eventos");
-                button.innerHTML = '<span class="mcid-summary-tile" style="border-color:' + COLORS[category] + ';color:' + COLORS[category] + '">' + n + '</span>';
+                button.innerHTML = '<span class="mcid-summary-tile" style="background:' + COLORS[category] + ';border-color:' + COLORS[category] + ';color:#fff">' + n + '</span>';
                 button.onclick = () => {
                     self.state.category = self.state.category === category ? null : category;
                     self.state.expandedEventId = null;
