@@ -99,6 +99,18 @@
       "description": "Base[Proponente do Evento]."
     },
     {
+      "displayName": "Valor de Investimento",
+      "name": "valorInvestimento",
+      "kind": "Grouping",
+      "description": "Base[Valor de Investimento]."
+    },
+    {
+      "displayName": "Valor de Repasse",
+      "name": "valorRepasse",
+      "kind": "Grouping",
+      "description": "Base[Valor de Repasse]."
+    },
+    {
       "displayName": "Quantidade de UH",
       "name": "uh",
       "kind": "Grouping",
@@ -164,6 +176,12 @@
             "max": 1
           },
           "proponente": {
+            "max": 1
+          },
+          "valorInvestimento": {
+            "max": 1
+          },
+          "valorRepasse": {
             "max": 1
           },
           "uh": {
@@ -260,6 +278,16 @@
             {
               "for": {
                 "in": "proponente"
+              }
+            },
+            {
+              "for": {
+                "in": "valorInvestimento"
+              }
+            },
+            {
+              "for": {
+                "in": "valorRepasse"
               }
             },
             {
